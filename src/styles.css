@@ -1,0 +1,41 @@
+* {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+}
+
+body {
+	background-color: rgb(199, 199, 199);
+	height: 100vh;
+	display: grid;
+	place-items: center;
+}
+
+img {
+	grid-area: img-stack;
+	object-fit: cover;
+	display: block;
+	width: 20rem;
+	height: 20rem;
+	outline: 4px dashed;
+	outline-offset: 5px;
+}
+
+.imgContainer {
+	margin: 2rem auto;
+	display: grid;
+	grid-template-areas: "img-stack";
+}
+
+.skele-loader {
+	grid-area: img-stack;
+	fill: rgb(92, 92, 92);
+	z-index: -10;
+	animation: loader-anim 0.7s linear infinite alternate both;
+}
+
+@keyframes loader-anim {
+	to {
+		opacity: 0.2;
+	}
+}
