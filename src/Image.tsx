@@ -1,10 +1,7 @@
-import {
-	ComponentPropsWithoutRef,
-	/* useEffect */ useRef,
-	useState,
-} from "react";
+import { ComponentPropsWithoutRef, useEffect, useRef, useState } from "react";
 import SkeletonLoader from "./skeletonLoader";
 import { BaseType } from "./skeletonLoader";
+import useIntersectionObserver from "./useIntersectionObserver";
 
 // make src and alt mandatory
 type ImagePropsType = { src: string; alt: string } & Omit<
@@ -23,6 +20,8 @@ export default function Image({
 	...restProps
 }: ImagePropsType) {
 	const [isLoaded, setIsLoaded] = useState(false);
+	const [isImageVisible, imgContainerRef] =
+		useIntersectionObserver<HTMLDivElement>();
 	const imgRef = useRef<HTMLImageElement>(null);
 	const [skeletonLoaderProps] = useState<BaseType>(() => {
 		let options: BaseType;
@@ -51,19 +50,21 @@ export default function Image({
 		return options;
 	});
 
-	// //simulate delayed response
-	// useEffect(() => {
-	//   if (!imgRef.current) return;
+	//only attach src when element is visible within the viewport
+	useEffect(() => {
+		if (!isImageVisible || !imgRef.current) return;
 
-	//   const img = imgRef.current;
-	//   const timer = setTimeout(() => {
-	//     img.src = src;
-	//   }, 7000);
+		const img = imgRef.current;
+		img.src = src;
+		//simulate delayed response
+		//   const timer = setTimeout(() => {
+		//     img.src = src;
+		//   }, 7000);
 
-	//   return () => {
-	//     if (timer) clearTimeout(timer);
-	//   };
-	// }, [src]);
+		//   return () => {
+		//     if (timer) clearTimeout(timer);
+		//   };
+	}, [isImageVisible, src]);
 
 	// image onload function
 	function handleOnImgLoad() {
@@ -72,11 +73,11 @@ export default function Image({
 	}
 
 	return (
-		<div className="imgContainer">
+		<div className="imgContainer" ref={imgContainerRef}>
 			<img
 				style={{ opacity: isLoaded ? 1 : 0 }}
 				ref={imgRef}
-				src={src}
+				// src={src}
 				alt={alt}
 				onLoad={handleOnImgLoad}
 				{...restProps}
