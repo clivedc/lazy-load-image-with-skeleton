@@ -6,9 +6,13 @@
 
 body {
 	background-color: rgb(199, 199, 199);
-	height: 100vh;
+}
+
+#root {
+	height: 200vh;
 	display: grid;
-	place-items: center;
+	justify-items: center;
+	align-content: space-around;
 }
 
 img {
